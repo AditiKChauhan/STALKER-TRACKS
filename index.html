@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stalker Path 10: Cosmic Intercept</title>
+    <style>
+      :root {
+        --red: #ff0000;
+        --gold: #d4af37;
+        --bg: #050505;
+      }
+
+      body {
+        background: var(--bg);
+        color: #ccc;
+        font-family: "Courier New", monospace;
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .stalker-frame {
+        width: 100%;
+        max-width: 550px;
+        border: 1px solid var(--red);
+        background: #000;
+        padding: 30px;
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+      }
+
+      .header {
+        font-family: "Courier New", monospace;
+        font-size: 2.5rem;
+        color: #ff0000;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        text-shadow: 0 0 10px #ff0000;
+        animation: glowPulse 2s infinite ease-in-out;
+      }
+      @keyframes glowPulse {
+        0%,
+        100% {
+          opacity: 1;
+          text-shadow: 0 0 20px red;
+        }
+        50% {
+          opacity: 0.8;
+          text-shadow: 0 0 5px red;
+        }
+      }
+
+      input,
+      select {
+        width: 100%;
+        background: #111;
+        border: 1px solid #333;
+        color: var(--red);
+        padding: 12px;
+        margin-bottom: 12px;
+        box-sizing: border-box;
+        outline: none;
+        font-family: "Courier New", monospace;
+      }
+
+      .btn-grid {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      button {
+        flex: 1;
+        padding: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        text-transform: uppercase;
+        border: none;
+        transition: 0.2s;
+      }
+
+      .btn-main {
+        background: var(--red);
+        color: #000;
+      }
+      .btn-shadow {
+        background: #010a11;
+        color: var(--gold);
+        border: 1px solid var(--gold);
+      }
+
+      button:hover {
+        filter: brightness(1.3);
+        transform: scale(1.02);
+      }
+
+      .data-panel {
+        background: rgba(255, 255, 255, 0.03);
+        border-left: 3px solid var(--red);
+        padding: 15px;
+        margin-bottom: 15px;
+        animation: flicker 0.5s ease;
+      }
+
+      .fixation-panel {
+        background: rgba(212, 175, 55, 0.08);
+        border: 1px solid var(--gold);
+        padding: 15px;
+        margin-bottom: 15px;
+        color: var(--gold);
+        animation: flicker 0.8s ease;
+      }
+
+      .fixation-list {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0 0 0;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .fixation-list li {
+        padding: 3px 0;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      }
+
+      .label {
+        color: var(--red);
+        font-size: 0.7rem;
+        display: block;
+        margin-bottom: 5px;
+        letter-spacing: 1px;
+      }
+
+      .thought-list {
+        margin: 0;
+        padding-left: 15px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      .gps-box {
+        border: 1px dashed var(--gold);
+        padding: 10px;
+        text-align: center;
+        color: var(--gold);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+
+      @keyframes flicker {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .drifting-fog {
+        font-size: 8px;
+        color: transparent;
+        cursor: pointer;
+        user-select: none;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.8) 0%,
+          rgba(255, 255, 255, 0.2) 50%,
+          rgba(255, 255, 255, 0.8) 100%
+        );
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        filter: blur(4px);
+        transition: filter 1.5s ease, font-size 0.5s ease;
+        animation: drift 8s linear infinite;
+      }
+      .drifting-fog:hover {
+        filter: blur(0px);
+        color: white;
+        animation: none;
+      }
+      @keyframes drift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stalker-frame">
+      <div class="header"><b>STALKER THINKS</b></div>
+      <h6 style="text-align: center; color: #ff0000">
+        Created By Your Stalker <3
+      </h6>
+
+      <input type="text" id="targetName" placeholder="SUBJECT FULL NAME" />
+      <input type="date" id="targetDOB" />
+
+      <select id="targetStatus">
+        <option value="single">STATUS: UNBOUND</option>
+        <option value="married">STATUS: BOUND</option>
+      </select>
+
+      <div class="btn-grid">
+        <button class="btn-main" onclick="scan('light')">Scan Mind</button>
+        <button class="btn-shadow" onclick="scan('shadow')">Shadow Sync</button>
+      </div>
+
+      <div id="output"></div>
+
+      <p style="text-align: center; color: #ff0000; font-size: 10px">
+        Info Doesn't Save. 100% Trustable Website.
+      </p>
+      <h6 style="text-align: center; align-items: center" class="drifting-fog">
+        Created By- Aditi K Chauhan...🤫
+      </h6>
+    </div>
+
+    <script>
+      function getZodiac(date) {
+        const d = new Date(date);
+        const m = d.getMonth() + 1;
+        const day = d.getDate();
+        if ((m == 3 && day >= 21) || (m == 4 && day <= 19)) return "Aries ♈";
+        if ((m == 4 && day >= 20) || (m == 5 && day <= 20)) return "Taurus ♉";
+        if ((m == 5 && day >= 21) || (m == 6 && day <= 20)) return "Gemini ♊";
+        if ((m == 6 && day >= 21) || (m == 7 && day <= 22)) return "Cancer ♋";
+        if ((m == 7 && day >= 23) || (m == 8 && day <= 22)) return "Leo ♌";
+        if ((m == 8 && day >= 23) || (m == 9 && day <= 22)) return "Virgo ♍";
+        if ((m == 9 && day >= 23) || (m == 10 && day <= 22)) return "Libra ♎";
+        if ((m == 10 && day >= 23) || (m == 11 && day <= 21))
+          return "Scorpio ♏";
+        if ((m == 11 && day >= 22) || (m == 12 && day <= 21))
+          return "Sagittarius ♐";
+        if ((m == 12 && day >= 22) || (m == 1 && day <= 19))
+          return "Capricorn ♑";
+        if ((m == 1 && day >= 20) || (m == 2 && day <= 18))
+          return "Aquarius ♒";
+        return "Pisces ♓";
+      }
+
+      function scan(mode) {
+        const name = document.getElementById("targetName").value;
+        const dob = document.getElementById("targetDOB").value;
+        const status = document.getElementById("targetStatus").value;
+        const out = document.getElementById("output");
+
+        if (!name || !dob) return;
+
+        out.innerHTML =
+          "<p style='color:var(--red); text-align:center;'>ACCESSING ASTRO-CHART...</p>";
+
+        setTimeout(() => {
+          const today = new Date();
+          const dateStamp =
+            today.getFullYear() * 10000 +
+            (today.getMonth() + 1) * 100 +
+            today.getDate();
+          const seed =
+            name.split("").reduce((a, b) => a + b.charCodeAt(0), 0) +
+            new Date(dob).getTime() +
+            dateStamp;
+          const sign = getZodiac(dob);
+          const salt = mode === "shadow" ? 13 : 1;
+
+          const peoplePoolSingle = [
+            "Their best friend",
+            "A secret admirer",
+            "An old rival",
+            "Someone they ghosted",
+            "A current crush",
+            "A soulmate they haven't met",
+            "The one who got away",
+            "A person they saw today",
+            "A childhood friend",
+            "A secret enemy",
+          ];
+
+          const peoplePoolMarried = [
+            "Their spouse",
+            "Their best friend",
+            "A family member",
+            "A trusted colleague",
+            "An old mentor",
+            "The person they share a life with",
+            "A childhood friend",
+            "An old flame",
+          ];
+
+          const commonPool = [
+            "Their future self",
+            "A hidden enemy",
+            "A neighbor with a secret",
+          ];
+          const topicPool = [
+            "A complex work project",
+            "A lie they told recently",
+            "An embarrassing memory",
+            "A secret academic goal",
+            "A massive change they are planning",
+            "A risky move",
+          ];
+
+          const actionPool = [
+            "is looping in their head",
+            "is causing them secret anxiety",
+            "is the reason they are acting distant",
+            "is appearing in their dreams tonight",
+            "is making them feel deep regret",
+            "is inspiring a risky plan",
+            "is making them doubt their choices",
+            "is the focus of their current concern",
+            "is something they want to protect",
+            "is keeping them awake at night",
+          ];
+
+          const desirePool = [
+            "to delete their social media",
+            "to confess a truth they've hidden",
+            "to be forgiven for an unspoken mistake",
+            "to win an argument from the past",
+            "to be truly understood",
+            "to take back a choice",
+          ];
+
+          const futurePool = [
+            "They will receive a strange message.",
+            "A sudden move shocks their inner circle.",
+            "A hidden truth comes out.",
+            "They will make a move they've been scared to make.",
+          ];
+
+          const locPool = [
+            "The House of Regret",
+            "The Zone of Ambition",
+            "The Void of Silence",
+            "The Chamber of Secrets",
+          ];
+
+          const get = (arr, offset) => arr[(seed * offset * salt) % arr.length];
+
+          let fixationHTML = "";
+          if (mode === "shadow") {
+            const fixGroup =
+              status === "married" ? peoplePoolMarried : peoplePoolSingle;
+            const fix1 = get(fixGroup, 9);
+            const fix2 = get(fixGroup, 17);
+            const fix3 = get(fixGroup, 25);
+
+            fixationHTML = `
+                <div class="fixation-panel">
+                    <span class="label" style="color:var(--gold)">TOP 3 PEOPLE THEY ARE THINKING ABOUT</span>
+                    <ul class="fixation-list">
+                        <li>01. ${fix1}</li>
+                        <li>02. ${fix2}</li>
+                        <li>03. ${fix3}</li>
+                    </ul>
+                </div>
+            `;
+          }
+
+          const numThoughts = 4 + (seed % 5);
+          let thoughtItems = "";
+          for (let i = 0; i < numThoughts; i++) {
+            const poolPicker = (seed + i) % 10;
+            let subject;
+            if (poolPicker < 8) {
+              const group =
+                status === "married" ? peoplePoolMarried : peoplePoolSingle;
+              subject = get([...group, ...commonPool], (i + 1) * 3);
+            } else {
+              subject = get(topicPool, (i + 1) * 5);
+            }
+            const action = get(actionPool, (i + 7) * 2);
+            thoughtItems += `<li>${subject} ${action}.</li>`;
+          }
+
+          out.innerHTML = `
+                ${fixationHTML}
+                <div class="data-panel">
+                    <span class="label">INTERCEPTED FREQUENCIES (${sign})</span>
+                    <ul class="thought-list">
+                        ${thoughtItems}
+                    </ul>
+                </div>
+                <div class="data-panel" style="border-color: var(--gold)">
+                    <span class="label" style="color: var(--gold)">HIDDEN DESIRE</span>
+                    "They want ${get(desirePool, 4)}."
+                </div>
+                <div class="data-panel" style="border-color: white">
+                    <span class="label" style="color: white">PROBABLE FUTURE</span>
+                    "${get(futurePool, 5)}"
+                </div>
+                <div class="gps-box">
+                    MENTAL LOCATION: ${get(locPool, 7)}
+                </div>
+            `;
+        }, 600);
+      }
+    </script>
+  </body>
+</html>
